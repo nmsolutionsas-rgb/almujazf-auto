@@ -14,7 +14,7 @@ const stats = [
 
 export default function About() {
   const ref = useRef<HTMLElement>(null);
-  const { t } = useI18n();
+  const { t, labelClass } = useI18n();
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -27,7 +27,7 @@ export default function About() {
           v: target,
           duration: 1.8,
           ease: "power2.out",
-          scrollTrigger: { trigger: num, start: "top 85%" },
+          scrollTrigger: { trigger: num, start: "top 85%", once: true },
           onUpdate: () => {
             num.textContent = Math.round(obj.v).toLocaleString("en-US");
           },
@@ -36,36 +36,46 @@ export default function About() {
       gsap.fromTo(
         ".about-copy",
         { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".about-copy", start: "top 85%" } }
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".about-copy", start: "top 85%", once: true },
+        }
       );
     }, el);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="about" ref={ref} className="relative overflow-hidden bg-navy py-24 sm:py-32">
+    <section id="about" ref={ref} className="relative overflow-hidden bg-navy py-16 sm:py-32">
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.14]"
-        style={{ backgroundImage: "url(/images/facade-real.png)", backgroundSize: "cover", backgroundPosition: "center" }}
+        style={{ backgroundImage: "url(/images/facade-real.jpg)", backgroundSize: "cover", backgroundPosition: "center 40%" }}
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-night via-transparent to-night" />
 
-      <div className="relative mx-auto max-w-5xl px-5 text-center sm:px-8">
+      <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-8">
         <div className="about-copy">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.35em] text-gold">{t("about_kicker")}</p>
-          <h2 className="font-serif text-4xl font-bold text-cream sm:text-5xl">{t("about_title")}</h2>
-          <div className="hairline mx-auto mt-6 w-40" />
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-cream/75">{t("about_body")}</p>
+          <p className={`mb-3 text-[10px] font-bold text-gold sm:text-xs ${labelClass()}`}>{t("about_kicker")}</p>
+          <h2 className="font-serif text-3xl font-bold text-cream sm:text-5xl">{t("about_title")}</h2>
+          <div className="hairline mx-auto mt-5 w-32 sm:mt-6 sm:w-40" />
+          <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-cream/75 sm:mt-8 sm:text-lg">{t("about_body")}</p>
         </div>
 
-        <div className="mt-16 grid grid-cols-2 gap-8 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:mt-16 sm:gap-8 lg:grid-cols-4">
           {stats.map((s) => (
-            <div key={s.key} className="rounded-2xl border border-cream/10 bg-night/60 p-6 backdrop-blur">
-              <div className="font-serif text-4xl font-bold text-gold sm:text-5xl">
-                <span className="stat-num" data-value={s.value}>0</span>
+            <div key={s.key} className="rounded-2xl border border-cream/10 bg-night/60 p-4 backdrop-blur sm:p-6">
+              <div className="font-serif text-3xl font-bold text-gold sm:text-5xl" dir="ltr">
+                <span className="stat-num" data-value={s.value}>
+                  0
+                </span>
                 <span>{s.suffix}</span>
               </div>
-              <p className="mt-2 text-xs font-medium uppercase tracking-widest text-cream/60">{t(s.key)}</p>
+              <p className={`mt-2 text-[10px] font-medium leading-snug text-cream/60 sm:text-xs ${labelClass()}`}>
+                {t(s.key)}
+              </p>
             </div>
           ))}
         </div>
